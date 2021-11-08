@@ -10,6 +10,6 @@ class Categoryadmin(admin.ModelAdmin):
 @admin.register(ReadingBook)
 class ReadBookAdmin(admin.ModelAdmin):
     list_display = ('name','name_id','read_write','author',)
-    Search = ('name','author',)
+    search_fields = ('name','author',)
     ListFilter = ('name-id',)
     

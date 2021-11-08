@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %} Trang Chủ {% endblock %}
+
+{% block content %}
+
+<div class="container courses-list grid">
+
+  {% for item in object_list %}
+  <div class="card g-col-6 g-col-md-4 " style="width: 18rem;">
+    <img src="..." class="card-img-top" alt="...">
+    <div class="card-body">
+      <h5 class="card-title">{{ item.name }}</h5>
+      <p class="card-text">{{ item.author }}</p>
+      <a href="#" class="btn btn-primary">Go somewhere</a>
+    </div>
+  </div>
+  
+  {% endfor %}
+</div>
+
+
+{% endblock %}
