@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Category(models.Model):
     name = models.CharField(max_length=200, help_text='Thể loại của bài đọc')
 
@@ -15,6 +16,8 @@ class ReadingBook(models.Model):
     name_id = models.CharField(max_length=10, help_text='ID của bài đọc')
     author = models.CharField(max_length=100, help_text='Tên tác giả', blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
+    image = models.ImageField(null = True)
+    
     def __str__(self):
         return self.name
 

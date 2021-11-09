@@ -1,3 +1,4 @@
+from django.conf.urls import include
 from django.urls import path
 
 from Reading import views
@@ -9,5 +10,10 @@ urlpatterns = [
     path('', views.home_view, name='home'),
     path('create-newRead/', views.create_news_reading, name='create-news-read'),
     path('courses/', views.courses_views, name='courses-views'),
+    path('accounts',include('django.contrib.auth.urls')),
     path('login/',views.Login, name='login'),
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('profile/', views.Profile, name='profile'),
+    path('register/', views.register, name="register"),
+
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+ 

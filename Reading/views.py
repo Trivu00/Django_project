@@ -1,8 +1,14 @@
-from django import forms
-from django.shortcuts import render
 
-from Reading.forms import CreateNewReadingBook
-from myproject.Reading.models import ReadingBook
+from django.http.response import HttpResponseRedirect
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+
+from Reading.forms import CreateNewReadingBook, RegistrationForm
+from Reading.models import ReadingBook
+
+
+
+
 
 #Tạo render cho HOME
 def home_view(request):
@@ -28,12 +34,12 @@ def create_news_reading(request):
     )
  #Tạo render cho COURSES
 def courses_views(request):
-    object_list = ReadingBook.objects.filter()
+    object_list = ReadingBook.objects.all()
     
     return render(
         request,
         'courses.html',{
-            'object_list':object_list
+            'object_list':object_list,
         }
     )
 
@@ -43,3 +49,23 @@ def Login(request):
         request,
         'login.html',{}
     )
+
+#Tạo render cho form Profile
+@login_required
+def Profile(request):
+    return render(
+        request,
+        'profile.html',{}
+    )
+
+#Tạo render cho REGISTER
+
+
+def register(request):
+    form = RegistrationForm()
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/')
+    return render(request, 'register.html', {'form': form})

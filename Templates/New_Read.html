@@ -4,7 +4,7 @@
 
 {% block content %}
 <h1 class="">Tạo bài đọc mới </h1>
-
+<div class="container">
     <form action="." method="post">
 
         {% csrf_token %} <!--Chống tấn công CSRF-->
@@ -15,5 +15,7 @@
             <button type="submit">Submid</button>
         </p>
     </form>
+</div>
+    
 {% endblock %}
 
