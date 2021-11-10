@@ -18,10 +18,10 @@ class CreateNewReadingBook(forms.ModelForm):
         )
 
 class RegistrationForm(forms.Form):
-    username = forms.CharField(label='Tài khoản', max_length=30)
+    username = forms.CharField(label='User name', max_length=30)
     email = forms.EmailField(label='Email')
-    password1 = forms.CharField(label='Mật khẩu', widget=forms.PasswordInput())
-    password2 = forms.CharField(label='Nhập lại mật khẩu', widget=forms.PasswordInput())
+    password1 = forms.CharField(label='Password', widget=forms.PasswordInput())
+    password2 = forms.CharField(label='Repeat Passwword', widget=forms.PasswordInput())
 
     def clean_password2(self):
         if 'password1' in self.cleaned_data:

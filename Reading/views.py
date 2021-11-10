@@ -17,6 +17,12 @@ def home_view(request):
         'home.html',{}
     )
 
+#Tạo render cho LESSON
+def about_view(request):
+    return render(
+        request,
+        'about.html',{}
+    )
 #Tạo render cho CREATE_READ_NEWS
 
 def create_news_reading(request):
@@ -40,6 +46,16 @@ def courses_views(request):
         request,
         'courses.html',{
             'object_list':object_list,
+        }
+    )
+#Tạo render cho LESSON
+def lesson_view(request, id):
+    object_views = ReadingBook.objects.get(id = id)
+    
+    return render(
+        request,
+        'lesson.html',{
+            'object_views': object_views,
         }
     )
 
