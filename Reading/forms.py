@@ -1,45 +1,28 @@
 from django import forms
-from django.db import models
-from django.forms import fields
+from django.forms.models import ModelForm
+
 from Reading.models import ReadingBook
 
-import re
 from django.contrib.auth.models import User
+
+from .models import *
+from django.contrib.auth.forms import UserCreationForm
 
 class CreateNewReadingBook(forms.ModelForm):
     class Meta : 
         model = ReadingBook
         fields = (
             'name',
-            'read_write',
-            'name_id',
-            'author',
-            'image',    
+            'content_reading',    
         )
 
-class RegistrationForm(forms.Form):
-    username = forms.CharField(label='User name', max_length=30)
-    email = forms.EmailField(label='Email')
-    password1 = forms.CharField(label='Password', widget=forms.PasswordInput())
-    password2 = forms.CharField(label='Repeat Passwword', widget=forms.PasswordInput())
+class createuserform(UserCreationForm):
+    class Meta:
+        model=User
+        fields=['username','password'] 
 
-    def clean_password2(self):
-        if 'password1' in self.cleaned_data:
-            password1 = self.cleaned_data['password1']
-            password2 = self.cleaned_data['password2']
-            if password1 == password2 and password1:
-                return password2
-        raise forms.ValidationError("Mật khẩu không hợp lệ")
+class addQuestionform(ModelForm):
+    class Meta:
+        model=QuesModel
+        fields="__all__"
 
-    def clean_username(self):
-        username = self.cleaned_data['username']
-        if not re.search(r'^\w+$', username):
-            raise forms.ValidationError("Tên tài khoản có kí tự đặc biệt")
-        try:
-            User.objects.get(username=username)
-        except User.DoesNotExist:
-            return username
-        raise forms.ValidationError("Tài khoản đã tồn tại")
-
-    def save(self):
-        User.objects.create_user(username=self.cleaned_data['username'], email=self.cleaned_data['email'], password=self.cleaned_data['password1'])

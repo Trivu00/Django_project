@@ -1,87 +1,126 @@
 
-from django.http.response import HttpResponseRedirect
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-
-from Reading.forms import CreateNewReadingBook, RegistrationForm
-from Reading.models import ReadingBook
-
+from django.contrib.auth.forms import AuthenticationForm
+from django.db.models.fields.related import ForeignKey
+from django.shortcuts import redirect, render
+from Reading.models import QuesModel, ReadingBook
+from Reading.forms import createuserform
+from django.shortcuts import redirect,render
+from django.contrib.auth import login,logout,authenticate
+from .forms import *
+from .models import *
 
 
 
 
 #Tạo render cho HOME
 def home_view(request):
+    object_list = ReadingBook.objects.all()
+
     return render(
         request,
-        'home.html',{}
+        'dashboard.html',{
+            'object_list':object_list,
+        }
     )
 
-#Tạo render cho LESSON
+#Tạo render cho ABOUT
 def about_view(request):
     return render(
         request,
         'about.html',{}
     )
-#Tạo render cho CREATE_READ_NEWS
 
-def create_news_reading(request):
+
+#Tạo render cho READ-PAGE
+def read_page_view(request, id):
+
     if request.method == 'POST':
-        pass
-    else:
-        form = CreateNewReadingBook()
+        print(request.POST)
+        object_views = ReadingBook.objects.get(id = id) 
+        questions=QuesModel.objects.filter(ReadingBook,id)
         
-    return render(
-        request,
-        'New_Read.html',
-        {
-            'form' : form
+        score=0
+        wrong=0
+        correct=0
+        total=0
+        for q in questions:
+            total+=1
+            print(request.POST.get(q.question))
+            print(q.ans)
+            print()
+            if q.ans ==  request.POST.get(q.question):
+                score+=10
+                correct+=1
+            else:
+                wrong+=1
+        percent = score/(total*10) *100
+        context = {
+            'score':score,
+            'time': request.POST.get('timer'),
+            'correct':correct,
+            'wrong':wrong,
+            'percent':percent,
+            'total':total,
+            'object_views': object_views,
+            
         }
-    )
- #Tạo render cho COURSES
-def courses_views(request):
-    object_list = ReadingBook.objects.all()
-    
-    return render(
-        request,
-        'courses.html',{
-            'object_list':object_list,
-        }
-    )
-#Tạo render cho LESSON
-def lesson_view(request, id):
-    object_views = ReadingBook.objects.get(id = id)
-    
-    return render(
-        request,
-        'lesson.html',{
+        return render(request,'Test/result.html', context)
+    else:
+        object_views = ReadingBook.objects.get(id = id)
+        questions=QuesModel.objects.filter()
+        
+        context = {
+            'questions':questions,
             'object_views': object_views,
         }
-    )
+        return render(request,'read-page.html', context)
+#Tạo render cho READING    
+def reading_view(request):
+    object_view = ReadingBook.objects.all()
+    object_view1 = ReadingBook.objects.filter(category = 'Statire Story')
 
-#Tạo render cho form_LOGIN
-def Login(request):
-    return render(
+    return render (
         request,
-        'login.html',{}
-    )
+        'reading.html',{
+        'object_view': object_view,
+        'object_view1' : object_view1,
 
-#Tạo render cho form Profile
-@login_required
-def Profile(request):
-    return render(
-        request,
-        'profile.html',{}
-    )
+        }
+    ) 
 
-#Tạo render cho REGISTER
+#Tạo render cho Register
+def registerPage(request):
+    if request.user.is_authenticated:
+        return redirect('home') 
+    else: 
+        form=createuserform()
+        if request.method=='POST':
+            form=createuserform(request.POST)
+            if form.is_valid() :
+                user=form.save()
+                return redirect('login')
+        context={
+            'form':form,
+        }
+        return render(request,'Sign/register.html',context)
+
+#Tạo render cho LogIn
+def loginPage(request):
+    if request.user.is_authenticated:
+        return redirect('home')
+    else:
+       if request.method=="POST":
+        username=request.POST.get('username')
+        password=request.POST.get('password')
+        user=AuthenticationForm(request,username=username,password=password)
+        if user is not None:
+            login(request,user)
+            return redirect('/')
+       context={}
+       return render(request,'Sign/login.html',context)
 
 
-def register(request):
-    form = RegistrationForm()
-    if request.method == 'POST':
-        form = RegistrationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/')
-    return render(request, 'register.html', {'form': form})
+#Tạo render cho LogOut
+def logoutPage(request):
+    logout(request)
+    return redirect('/')
