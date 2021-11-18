@@ -10,9 +10,9 @@ class Categoryadmin(admin.ModelAdmin):
 
 @admin.register(ReadingBook)
 class ReadBookAdmin(admin.ModelAdmin):
-    list_display = ('id_read','name','content_reading')
-    search_fields = ('id_read','name',)
+    list_display = ('name','content_reading')
+    search_fields = ('name',)
     
 @admin.register(QuesModel)
 class QuesMoldelAdmin(admin.ModelAdmin):
-    list_display = ('question','id_read',)
+    list_display = ('question','name_read',)

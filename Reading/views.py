@@ -37,7 +37,7 @@ def read_page_view(request, id):
     if request.method == 'POST':
         print(request.POST)
         object_views = ReadingBook.objects.get(id = id) 
-        questions=QuesModel.objects.filter(ReadingBook,id)
+        questions=QuesModel.objects.filter(name_read__name = id)
         
         score=0
         wrong=0
@@ -77,14 +77,14 @@ def read_page_view(request, id):
 #Tạo render cho READING    
 def reading_view(request):
     object_view = ReadingBook.objects.all()
-    object_view1 = ReadingBook.objects.filter(category = 'Statire Story')
-
+    object_view1 = ReadingBook.objects.filter(category__name = 'Daily life Story')
+    object_view2 = ReadingBook.objects.filter(category__name = 'Statire Story')
     return render (
         request,
         'reading.html',{
         'object_view': object_view,
         'object_view1' : object_view1,
-
+        'object_view2' :object_view2,
         }
     ) 
 
